@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var switchCalcularPropina: Switch? = null
     private var tvPropina : TextView?=null
     private var calcularPropina = false
-    var totalCuenta = CuentaMesa()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,18 +46,16 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 calcularTotalPastelChoclo()
                 calcularTotalCazuela()
-
+                calcularPropina()
                 calcularTotalCuentaSP()
-                //calcularPropina()
-                //calcularTotalConPropina()
+                calcularTotalConPropina()
             }
-
         }
         idCantPastelChoclo.addTextChangedListener(textWatcher)
         idCantCazuela.addTextChangedListener(textWatcher)
 
 
-        switchCalcularPropina?.setOnCheckedChangeListener{ buttonView, isChecked ->
+        switchCalcularPropina?.setOnCheckedChangeListener{ _, isChecked ->
             calcularPropina = isChecked
         }
     }
@@ -68,6 +66,9 @@ class MainActivity : AppCompatActivity() {
         val idCantCazuela = findViewById<EditText>(R.id.etCantidadCazuela)
         val cantCazuela = idCantCazuela.text.toString().toIntOrNull() ?: 0
         val totalCazuela = ItemMesa(cazuela,cantCazuela)
+
+
+
         //textview Cazuela
         findViewById<TextView>(R.id.tvPrecioCazuela).text = totalCazuela.calcularSubtotal().toString()
     }
@@ -78,13 +79,13 @@ class MainActivity : AppCompatActivity() {
         val idCantPastelChoclo = findViewById<EditText>(R.id.etCantidadPastelDeChoclo)
         val cantPastel = idCantPastelChoclo.text.toString().toIntOrNull() ?: 0
         val totalPastelChoclo = ItemMesa(pastelChoclo,cantPastel )
-
         // se actualiza el total del pastel de choclo
         findViewById<TextView>(R.id.tvPrecioPastel).text = totalPastelChoclo.calcularSubtotal().toString()
     }
 
     //Calcular total de la cuenta sin propina
     fun calcularTotalCuentaSP() {
+        var totalCuenta = CuentaMesa()
         //capturo el id
         val idCantPastelChoclo = findViewById<EditText>(R.id.etCantidadPastelDeChoclo)
         val idCantCazuela = findViewById<EditText>(R.id.etCantidadCazuela)
@@ -92,26 +93,27 @@ class MainActivity : AppCompatActivity() {
         val cantPastelChoclo = idCantPastelChoclo.text.toString().toIntOrNull() ?: 0
         val cantCazuela = idCantCazuela.text.toString().toIntOrNull() ?: 0
 
-        //saco el total entre matcha y mochi
         totalCuenta.agregarItem(pastelChoclo, cantPastelChoclo)
         totalCuenta.agregarItem(cazuela, cantCazuela)
-
-
-
+        // Creo una variable para mostrar el total de la cuenta sin propina
         val totalCuentaSP = totalCuenta.calcularTotalSinPropina().toString()
         findViewById<TextView>(R.id.tvTotalComida).text = totalCuentaSP
     }
 
-   /* fun calcularPropina(){
+    fun calcularPropina(){
+        var totalCuenta = CuentaMesa()
         totalCuenta.calcularPropina()
-        findViewById<TextView>(R.id.etPropina).text =
+
+        findViewById<TextView>(R.id.tvTotalPropina).text =
             totalCuenta.calcularPropina().toString()
 
     }
 
     fun calcularTotalConPropina(){
+        var totalCuenta = CuentaMesa()
         totalCuenta.calcularTotalConPropina()
-        findViewById<TextView>(R.id.etTotalMasPropina).text =
+
+        findViewById<TextView>(R.id.tvTotalCuenta).text =
             totalCuenta.calcularTotalConPropina().toString()
-    }*/
+    }
 }
